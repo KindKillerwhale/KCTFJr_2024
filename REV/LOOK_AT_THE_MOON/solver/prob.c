@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+unsigned char rol(unsigned char value, int shift) {
+    return (value << shift) | (value >> (8 - shift));
+}
+
+unsigned char ror(unsigned char value, int shift) {
+    return (value >> shift) | (value << (8 - shift));
+}
+
+int main() {
+    unsigned char transformed[] = {0x3C, 0x2C, 0x2, 0x26, 0x14, 0x3E, 0x4E, 0x5C, 0xCC, 0x68, 0x4C, 0x18, 0x14, 0xE, 0xCC, 0x46, 0xCC, 0x4E, 0xCC, 0xC8, 0x76, 0x24, 0x14, 0x66, 0x0, 0x76, 0x36, 0x58, 0x14, 0xCC, 0x36, 0x7E, 0xCA, 0x18, 0x50};
+    unsigned char flag[99] = {0};
+
+
+    for(int i = 0; i < 35; ++i) {
+        flag[i] = rol(flag[i], 3);
+        flag[i] ^= 0xAA;
+        flag[i] = ror(flag[i], 2);
+    }
+
+    return 0;
+}

@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  ganache:
+    image: trufflesuite/ganache:latest
+    ports:
+      - "8545:8545"
+    command: >
+      -h 0.0.0.0
+      -p 8545
+      --chain.networkId=5777
+      --wallet.defaultBalance=1
+      --miner.blockGasLimit="0x1c9c380"
+      --wallet.totalAccounts=15000
+      --wallet.accountKeysPath="/shared/accounts.json"
+    volumes:
+      - shared_data:/shared
+    networks:
+      - mynetwork
+
+  mirinaestation:
+    build: .
+    ulimits:
+      nproc: 65535
+      core: 0
+    ports:
+      - "20007:5000"
+    environment:
+      - EXTERNAL_RPC_URL=http:/RPC_URL/interact
+      - WEB3_PROVIDER_URI=http://ganache:8545
+    restart: unless-stopped
+    depends_on:
+      - ganache
+    volumes:
+      - shared_data:/shared
+      - flag.txt:/flag.txt:ro
+    networks:
+      - mynetwork
+
+volumes:
+  shared_data:
+  flag.txt:
+
+networks:
+  mynetwork:
+    driver: bridge
